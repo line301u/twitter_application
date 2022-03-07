@@ -16,7 +16,10 @@ def _(language = "en"):
     item_text, error = x._is_item_name(request.forms.get("item_name"), language)
     if error : return x._send(400, error)
     item_price, error = x._is_item_price(request.forms.get("item_price"), language)
-    if error : return x._send(400, error)    
+    if error : return x._send(400, error) 
+    item_description, error = x._is_item_description(request.forms.get("item_description"), language)
+    if error : return x._send(400, error) 
+    print(item_description)
     item_id = str(uuid.uuid4())
     item_created_at = str(int(time.time()))
     now = datetime.now()
@@ -27,6 +30,7 @@ def _(language = "en"):
       "item_id":item_id,
       "item_name":item_text,
       "item_price":item_price,
+      "item_description":item_description,
       "item_created_at":item_created_at,
       "item_created_at_date":item_created_at_date,
       "item_updated_at":item_updated_at,
@@ -39,7 +43,7 @@ def _(language = "en"):
   try:    
     db = x._db_connect("database.sqlite")
     db.execute("""INSERT INTO items 
-                VALUES(:item_id, :item_name, :item_price, :item_created_at, 
+                VALUES(:item_id, :item_name, :item_price, :item_description, :item_created_at, 
                 :item_created_at_date, :item_updated_at, :item_updated_at_date)""", item)
     db.commit()
     return item
